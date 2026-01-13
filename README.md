@@ -5,12 +5,18 @@
 Библиотека
 
 ## Реализованы следующие страницы
+### Начальная страница
+![Начальная страница](reportassets/home-page.png)
 ### Страница книг
-![Страница книг](reportassets/book-list.png)
+![Страница книг](reportassets/books-page.png)
 ### Страница добавления книг
-![Страница добавления книг](reportassets/create-book.png)
+![Страница добавления книг](reportassets/add-book-page.png)
+### Страница редактирования книг
+![Страница редактирования книг](reportassets/edit-book-page.png)
 ### Страница авторов
-![Страница авторов](reportassets/authors-list.png)
+![Страница авторов](reportassets/authors-page.png)
 ### Страница добавления авторов
-![Страница добавления авторов](reportassets/create-author.png)
+![Страница добавления авторов](reportassets/add-author-page.png)
+### Страница редактирования авторов
+![Страница редактирования авторов](reportassets/edit-author-page.png)
 
