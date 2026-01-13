@@ -1,11 +1,13 @@
 package com.shpyakin.javassau.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @Data
+@NoArgsConstructor
 public class BookDTO implements Serializable {
     private Long id;
     private String title;

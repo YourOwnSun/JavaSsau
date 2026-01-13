@@ -1,6 +1,5 @@
 package com.shpyakin.javassau.controller;
 
-import com.shpyakin.javassau.model.Book;
 import com.shpyakin.javassau.model.BookDTO;
 import com.shpyakin.javassau.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookDTO> getBookById(@PathVariable("id") Long id) {
+    public ResponseEntity<BookDTO> getById(@PathVariable("id") Long id) {
         BookDTO book = bookService.getById(id);
         return book != null
             ? ResponseEntity.ok(book)
@@ -30,18 +29,18 @@ public class BookController {
     }
 
     @PostMapping
-    public Book createBook(@RequestBody Book book) {
-        return bookService.create(book);
+    public BookDTO create(@RequestBody BookDTO bookDTO) {
+        return bookService.create(bookDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable("id") Long id, @RequestBody Book bookDetails) {
-        Book updatedBook = bookService.update(id, bookDetails);
+    public ResponseEntity<BookDTO> update(@PathVariable("id") Long id, @RequestBody BookDTO bookDTO) {
+        BookDTO updatedBook = bookService.update(id, bookDTO);
         return ResponseEntity.ok(updatedBook);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         bookService.delete(id);
         return ResponseEntity.noContent().build();
     }

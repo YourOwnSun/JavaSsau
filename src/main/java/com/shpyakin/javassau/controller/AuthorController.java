@@ -1,6 +1,5 @@
 package com.shpyakin.javassau.controller;
 
-import com.shpyakin.javassau.model.Author;
 import com.shpyakin.javassau.model.AuthorDTO;
 import com.shpyakin.javassau.service.AuthorService;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +29,13 @@ public class AuthorController {
     }
 
     @PostMapping
-    public Author create(@RequestBody Author author) {
-        return authorService.create(author);
+    public AuthorDTO create(@RequestBody AuthorDTO authorDTO) {
+        return authorService.create(authorDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Author> update(@PathVariable("id") Long id, @RequestBody Author authorDetails) {
-        Author updatedAuthor = authorService.update(id, authorDetails);
+    public ResponseEntity<AuthorDTO> update(@PathVariable("id") Long id, @RequestBody AuthorDTO authorDTO) {
+        AuthorDTO updatedAuthor = authorService.update(id, authorDTO);
         return ResponseEntity.ok(updatedAuthor);
     }
 
