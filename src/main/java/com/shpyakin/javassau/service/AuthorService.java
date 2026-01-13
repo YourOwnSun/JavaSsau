@@ -1,38 +1,43 @@
 package com.shpyakin.javassau.service;
 
-import com.shpyakin.javassau.entity.Author;
-import jakarta.ejb.Stateless;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import com.shpyakin.javassau.model.Author;
+import com.shpyakin.javassau.repository.AuthorRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
+import java.util.Optional;
 
-@Stateless
+@Service
+@RequiredArgsConstructor
 public class AuthorService {
+    
+    private final AuthorRepository authorRepository;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    public Author create(Author author) {
-        entityManager.persist(author);
-        return author;
+    @Transactional
+    public List<Author> getAllAuthors() {
+        return authorRepository.findAll();
     }
 
-    public Author findById(Long id) {
-        return entityManager.find(Author.class, id);
+    @Transactional
+    public Author getAuthorById(Long id) {
+        Optional<Author> author = authorRepository.findById(id);
+        return author.orElse(null);
     }
 
-    public List<Author> getAll() {
-        return entityManager.createQuery("SELECT a FROM Author a", Author.class).getResultList();
+    @Transactional
+    public void saveAuthor(Author author) {
+        authorRepository.save(author);
     }
 
-    public Author update(Author author) {
-        return entityManager.merge(author);
+    @Transactional
+    public void updateAuthor(Author author) {
+        authorRepository.save(author);
     }
 
-    public void delete(Long id) {
-        Author author = entityManager.find(Author.class, id);
-        if (author != null) {
-            entityManager.remove(author);
-        }
+    @Transactional
+    public void deleteAuthor(Long id) {
+        authorRepository.deleteById(id);
     }
 }

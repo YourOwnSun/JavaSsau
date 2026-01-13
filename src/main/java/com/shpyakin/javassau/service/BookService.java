@@ -1,38 +1,54 @@
 package com.shpyakin.javassau.service;
 
-import com.shpyakin.javassau.entity.Book;
-import jakarta.ejb.Stateless;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import com.shpyakin.javassau.model.Author;
+import com.shpyakin.javassau.model.Book;
+import com.shpyakin.javassau.repository.AuthorRepository;
+import com.shpyakin.javassau.repository.BookRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
+import java.util.Optional;
 
-@Stateless
+@Service
+@RequiredArgsConstructor
 public class BookService {
+    
+    private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    public Book create(Book book) {
-        entityManager.persist(book);
-        return book;
+    @Transactional
+    public List<Book> getAllBooks() {
+        return bookRepository.findAll();
     }
 
-    public Book findById(Long id) {
-        return entityManager.find(Book.class, id);
+    @Transactional
+    public Book getBookById(Long id) {
+        Optional<Book> book = bookRepository.findById(id);
+        return book.orElse(null);
     }
 
-    public List<Book> getAll() {
-        return entityManager.createQuery("SELECT b FROM Book b", Book.class).getResultList();
-    }
-
-    public Book update(Book book) {
-        return entityManager.merge(book);
-    }
-
-    public void delete(Long id) {
-        Book book = entityManager.find(Book.class, id);
-        if (book != null) {
-            entityManager.remove(book);
+    @Transactional
+    public void saveBook(Book book) {
+        if (book.getAuthor() != null && book.getAuthor().getId() != null) {
+            Optional<Author> author = authorRepository.findById(book.getAuthor().getId());
+            author.ifPresent(book::setAuthor);
         }
+        bookRepository.save(book);
+    }
+
+    @Transactional
+    public void updateBook(Book book) {
+        if (book.getAuthor() != null && book.getAuthor().getId() != null) {
+            Optional<Author> author = authorRepository.findById(book.getAuthor().getId());
+            author.ifPresent(book::setAuthor);
+        }
+        bookRepository.save(book);
+    }
+
+    @Transactional
+    public void deleteBook(Long id) {
+        bookRepository.deleteById(id);
     }
 }

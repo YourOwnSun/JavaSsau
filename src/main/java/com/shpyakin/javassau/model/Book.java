@@ -1,16 +1,14 @@
-package com.shpyakin.javassau.entity;
+package com.shpyakin.javassau.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 @Entity
 @Getter
 @Setter
 @Table(name = "books")
-public class Book implements Serializable {
+public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,16 +16,15 @@ public class Book implements Serializable {
     @Column(nullable = false)
     private String title;
 
-    @Column(unique = true)
     private String isbn;
 
     @Column(name = "publication_year")
     private Integer publicationYear;
 
-    @ManyToOne
-    @JoinColumn(name = "author_id")
-    private Author author;
+    @Column(name = "available_copies", nullable = false)
+    private Integer availableCopies = 0;
 
-    @Column(name = "available_copies")
-    private Integer availableCopies;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "author_id", nullable = false)
+    private Author author;
 }

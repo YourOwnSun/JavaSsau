@@ -1,10 +1,9 @@
-package com.shpyakin.javassau.entity;
+package com.shpyakin.javassau.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.io.Serializable;
+import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "authors")
-public class Author implements Serializable {
+public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,6 +22,7 @@ public class Author implements Serializable {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "birth_date")
     @Temporal(TemporalType.DATE)
     private Date birthDate;
@@ -32,4 +32,8 @@ public class Author implements Serializable {
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Book> books;
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }
