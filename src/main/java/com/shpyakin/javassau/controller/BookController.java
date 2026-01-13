@@ -19,35 +19,35 @@ public class BookController {
 
     @GetMapping
     public String get(Model model) {
-        model.addAttribute("books", bookService.getAllBooks());
+        model.addAttribute("books", bookService.getAll());
         return "book/list";
     }
 
     @GetMapping("/new")
     public String showForm(Model model) {
         model.addAttribute("book", new Book());
-        model.addAttribute("authors", authorService.getAllAuthors());
+        model.addAttribute("authors", authorService.getAll());
         return "book/form";
     }
 
     @PostMapping
     public String save(@ModelAttribute("book") Book book, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("authors", authorService.getAllAuthors());
+            model.addAttribute("authors", authorService.getAll());
             return "book/form";
         }
-        bookService.saveBook(book);
+        bookService.save(book);
         return "redirect:/books";
     }
 
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
-        Book book = bookService.getBookById(id);
+        Book book = bookService.getById(id);
         if (book == null) {
             return "redirect:/books";
         }
         model.addAttribute("book", book);
-        model.addAttribute("authors", authorService.getAllAuthors());
+        model.addAttribute("authors", authorService.getAll());
         return "book/form";
     }
 
@@ -55,17 +55,17 @@ public class BookController {
     public String update(@PathVariable("id") Long id, @ModelAttribute("book") Book book,
                          BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("authors", authorService.getAllAuthors());
+            model.addAttribute("authors", authorService.getAll());
             return "book/form";
         }
         book.setId(id);
-        bookService.updateBook(book);
+        bookService.update(book);
         return "redirect:/books";
     }
 
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable("id") Long id) {
-        bookService.deleteBook(id);
+        bookService.delete(id);
         return "redirect:/books";
     }
 }

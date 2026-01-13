@@ -17,7 +17,7 @@ public class AuthorController {
 
     @GetMapping
     public String get(Model model) {
-        model.addAttribute("authors", authorService.getAllAuthors());
+        model.addAttribute("authors", authorService.getAll());
         return "author/list";
     }
 
@@ -32,13 +32,13 @@ public class AuthorController {
         if (result.hasErrors()) {
             return "author/form";
         }
-        authorService.saveAuthor(author);
+        authorService.save(author);
         return "redirect:/authors";
     }
 
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
-        Author author = authorService.getAuthorById(id);
+        Author author = authorService.getById(id);
         if (author == null) {
             return "redirect:/authors";
         }
@@ -53,13 +53,13 @@ public class AuthorController {
             return "author/form";
         }
         author.setId(id);
-        authorService.updateAuthor(author);
+        authorService.update(author);
         return "redirect:/authors";
     }
 
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable("id") Long id) {
-        authorService.deleteAuthor(id);
+        authorService.delete(id);
         return "redirect:/authors";
     }
 }

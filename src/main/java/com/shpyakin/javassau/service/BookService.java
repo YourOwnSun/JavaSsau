@@ -19,18 +19,18 @@ public class BookService {
     private final AuthorRepository authorRepository;
 
     @Transactional
-    public List<Book> getAllBooks() {
+    public List<Book> getAll() {
         return bookRepository.findAll();
     }
 
     @Transactional
-    public Book getBookById(Long id) {
+    public Book getById(Long id) {
         Optional<Book> book = bookRepository.findById(id);
         return book.orElse(null);
     }
 
     @Transactional
-    public void saveBook(Book book) {
+    public void save(Book book) {
         if (book.getAuthor() != null && book.getAuthor().getId() != null) {
             Optional<Author> author = authorRepository.findById(book.getAuthor().getId());
             author.ifPresent(book::setAuthor);
@@ -39,7 +39,7 @@ public class BookService {
     }
 
     @Transactional
-    public void updateBook(Book book) {
+    public void update(Book book) {
         if (book.getAuthor() != null && book.getAuthor().getId() != null) {
             Optional<Author> author = authorRepository.findById(book.getAuthor().getId());
             author.ifPresent(book::setAuthor);
@@ -48,7 +48,7 @@ public class BookService {
     }
 
     @Transactional
-    public void deleteBook(Long id) {
+    public void delete(Long id) {
         bookRepository.deleteById(id);
     }
 }

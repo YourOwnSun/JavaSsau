@@ -16,28 +16,28 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
 
     @Transactional
-    public List<Author> getAllAuthors() {
+    public List<Author> getAll() {
         return authorRepository.findAll();
     }
 
     @Transactional
-    public Author getAuthorById(Long id) {
+    public Author getById(Long id) {
         Optional<Author> author = authorRepository.findById(id);
         return author.orElse(null);
     }
 
     @Transactional
-    public void saveAuthor(Author author) {
+    public void save(Author author) {
         authorRepository.save(author);
     }
 
     @Transactional
-    public void updateAuthor(Author author) {
+    public void update(Author author) {
         authorRepository.save(author);
     }
 
     @Transactional
-    public void deleteAuthor(Long id) {
+    public void delete(Long id) {
         authorRepository.deleteById(id);
     }
 }
