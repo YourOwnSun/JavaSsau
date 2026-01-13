@@ -1,71 +1,48 @@
 package com.shpyakin.javassau.controller;
 
 import com.shpyakin.javassau.model.Book;
-import com.shpyakin.javassau.service.AuthorService;
+import com.shpyakin.javassau.model.BookDTO;
 import com.shpyakin.javassau.service.BookService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/books")
 public class BookController {
-    
+
     private final BookService bookService;
-    private final AuthorService authorService;
 
     @GetMapping
-    public String get(Model model) {
-        model.addAttribute("books", bookService.getAll());
-        return "book/list";
+    public List<BookDTO> getAll() {
+        return bookService.getAll();
     }
 
-    @GetMapping("/new")
-    public String showForm(Model model) {
-        model.addAttribute("book", new Book());
-        model.addAttribute("authors", authorService.getAll());
-        return "book/form";
+    @GetMapping("/{id}")
+    public ResponseEntity<BookDTO> getBookById(@PathVariable("id") Long id) {
+        BookDTO book = bookService.getById(id);
+        return book != null
+            ? ResponseEntity.ok(book)
+            : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public String save(@ModelAttribute("book") Book book, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("authors", authorService.getAll());
-            return "book/form";
-        }
-        bookService.save(book);
-        return "redirect:/books";
+    public Book createBook(@RequestBody Book book) {
+        return bookService.create(book);
     }
 
-    @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable("id") Long id, Model model) {
-        Book book = bookService.getById(id);
-        if (book == null) {
-            return "redirect:/books";
-        }
-        model.addAttribute("book", book);
-        model.addAttribute("authors", authorService.getAll());
-        return "book/form";
+    @PutMapping("/{id}")
+    public ResponseEntity<Book> updateBook(@PathVariable("id") Long id, @RequestBody Book bookDetails) {
+        Book updatedBook = bookService.update(id, bookDetails);
+        return ResponseEntity.ok(updatedBook);
     }
 
-    @PostMapping("/{id}")
-    public String update(@PathVariable("id") Long id, @ModelAttribute("book") Book book,
-                         BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("authors", authorService.getAll());
-            return "book/form";
-        }
-        book.setId(id);
-        bookService.update(book);
-        return "redirect:/books";
-    }
-
-    @GetMapping("/{id}/delete")
-    public String delete(@PathVariable("id") Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable("id") Long id) {
         bookService.delete(id);
-        return "redirect:/books";
+        return ResponseEntity.noContent().build();
     }
 }

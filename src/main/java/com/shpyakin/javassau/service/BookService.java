@@ -1,54 +1,58 @@
 package com.shpyakin.javassau.service;
 
-import com.shpyakin.javassau.model.Author;
 import com.shpyakin.javassau.model.Book;
-import com.shpyakin.javassau.repository.AuthorRepository;
+import com.shpyakin.javassau.model.BookDTO;
 import com.shpyakin.javassau.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class BookService {
-    
+
     private final BookRepository bookRepository;
-    private final AuthorRepository authorRepository;
 
     @Transactional
-    public List<Book> getAll() {
-        return bookRepository.findAll();
+    public List<BookDTO> getAll() {
+        return bookRepository.findAll().stream()
+            .map(BookDTO::new)
+            .collect(Collectors.toList());
     }
 
     @Transactional
-    public Book getById(Long id) {
-        Optional<Book> book = bookRepository.findById(id);
-        return book.orElse(null);
+    public BookDTO getById(Long id) {
+        return bookRepository.findById(id)
+            .map(BookDTO::new)
+            .orElse(null);
     }
 
     @Transactional
-    public void save(Book book) {
-        if (book.getAuthor() != null && book.getAuthor().getId() != null) {
-            Optional<Author> author = authorRepository.findById(book.getAuthor().getId());
-            author.ifPresent(book::setAuthor);
-        }
-        bookRepository.save(book);
+    public Book create(Book book) {
+        return bookRepository.save(book);
     }
 
     @Transactional
-    public void update(Book book) {
-        if (book.getAuthor() != null && book.getAuthor().getId() != null) {
-            Optional<Author> author = authorRepository.findById(book.getAuthor().getId());
-            author.ifPresent(book::setAuthor);
-        }
-        bookRepository.save(book);
+    public Book update(Long id, Book bookDetails) {
+        Book book = bookRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Book not found"));
+
+        book.setTitle(bookDetails.getTitle());
+        book.setIsbn(bookDetails.getIsbn());
+        book.setPublicationYear(bookDetails.getPublicationYear());
+        book.setAvailableCopies(bookDetails.getAvailableCopies());
+        book.setAuthor(bookDetails.getAuthor());
+
+        return bookRepository.save(book);
     }
 
     @Transactional
     public void delete(Long id) {
-        bookRepository.deleteById(id);
+        Book book = bookRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Book not found"));
+        bookRepository.delete(book);
     }
 }
